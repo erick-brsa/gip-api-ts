@@ -1,31 +1,75 @@
 import { Router } from 'express';
-import { body } from 'express-validator'
-import { createProduct } from './handlers/product';
+import { body, param } from 'express-validator';
+import {
+	getProducts,
+	getProductById,
+	createProduct,
+	updateProduct,
+	updateAvailability,
+	deleteProduct
+} from './handlers/product';
 import { handleInputErrors } from './middleware';
 
 const router = Router();
 
-router.get('/', (req, res) => {
-	res.json('Desde GET');
-});
+router.get('/', getProducts);
 
-router.post('/',
+router.get(
+	'/:id',
+	param('id').isInt().withMessage('ID no válido.'),
+	handleInputErrors,
+	getProductById
+);
+
+router.post(
+	'/',
 	// Validación
 	body('name')
-		.notEmpty().withMessage('El nombre del producto no puede ir vacío.'),
+		.notEmpty()
+		.withMessage('El nombre del producto no puede ir vacío.'),
 	body('price')
-		.notEmpty().withMessage('El precio del producto no puede ir vacío.')
-		.isNumeric().withMessage('Valor no válido.')
-		.custom(value => value > 0).withMessage('Precio no válido.'),
-		handleInputErrors,
-	createProduct);
+		.notEmpty()
+		.withMessage('El precio del producto no puede ir vacío.')
+		.isNumeric()
+		.withMessage('Precio no válido.')
+		.custom(value => value > 0)
+		.withMessage('Precio no válido.'),
+	handleInputErrors,
+	createProduct
+);
 
-router.put('/', (req, res) => {
-	res.json('Desde PUT');
-});
+router.put(
+	'/:id',
+	param('id').isInt().withMessage('ID no válido.'),
+	body('name')
+		.notEmpty()
+		.withMessage('El nombre del producto no puede ir vacío.'),
+	body('price')
+		.notEmpty()
+		.withMessage('El precio del producto no puede ir vacío.')
+		.isNumeric()
+		.withMessage('Precio no válido.')
+		.custom(value => value > 0)
+		.withMessage('Precio no válido.'),
+	body('availability')
+		.isBoolean()
+		.withMessage('Valor para disponibilidad no válido.'),
+	handleInputErrors,
+	updateProduct
+);
 
-router.patch('/', (req, res) => {
-	res.json('Desde PATCH');
-});
+router.patch(
+	'/:id',
+	param('id').isInt().withMessage('ID no válido.'),
+	handleInputErrors,
+	updateAvailability
+);
+
+router.delete(
+	'/:id',
+	param('id').isInt().withMessage('ID no válido.'),
+	handleInputErrors,
+	deleteProduct
+);
 
 export default router;
