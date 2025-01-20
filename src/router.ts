@@ -31,9 +31,9 @@ router.post(
 		.notEmpty()
 		.withMessage('El precio del producto no puede ir vacío.')
 		.isNumeric()
-		.withMessage('Precio no válido.')
+		.withMessage('El precio del producto debe ser un número.')
 		.custom(value => value > 0)
-		.withMessage('Precio no válido.'),
+		.withMessage('El precio del producto debe ser mayor a cero.'),
 	handleInputErrors,
 	createProduct
 );
@@ -48,9 +48,9 @@ router.put(
 		.notEmpty()
 		.withMessage('El precio del producto no puede ir vacío.')
 		.isNumeric()
-		.withMessage('Precio no válido.')
+		.withMessage('El precio del producto debe ser un número.')
 		.custom(value => value > 0)
-		.withMessage('Precio no válido.'),
+		.withMessage('El precio del producto debe ser mayor que cero.'),
 	body('availability')
 		.isBoolean()
 		.withMessage('Valor para disponibilidad no válido.'),
